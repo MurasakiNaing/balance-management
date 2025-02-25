@@ -10,7 +10,7 @@ public class SignUpController {
 
 	@GetMapping
 	String index() {
-		return "anonymouse/signup";
+		return "anonymous/signup";
 	}
 	
 }

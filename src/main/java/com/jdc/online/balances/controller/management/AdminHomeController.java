@@ -10,7 +10,7 @@ public class AdminHomeController {
 	
 	@GetMapping
 	String index() {
-		return "";
+		return "management/home";
 	}
 
 }
