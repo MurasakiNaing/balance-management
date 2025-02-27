@@ -23,11 +23,19 @@
 			</a>
 			
 			<ul class="navbar-nav">
+				
+				<li class="nav-item">
+					<a href="${ root }/admin/access" class="nav-link ${ title eq 'Access' ? 'active' : '' }">
+						<i class="bi bi-people"></i> Access History
+					</a>
+				</li>
+			
 				<li class="nav-item">
 					<a href="${ root }/admin/member" class="nav-link ${ title eq 'Members' ? 'active' : '' }">
 						<i class="bi bi-people"></i> Members
 					</a>
 				</li>
+				
 				<li class="nav-item">
 					<a href="${root}/signin" class="nav-link">
 						<i class="bi bi-lock"></i> Sign Out
