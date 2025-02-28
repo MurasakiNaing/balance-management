@@ -24,89 +24,30 @@
 		<div class="col">
 			<div class="row">
 				<div class="col">
-					<div class="card text-bg-info">
-						<div class="card-body">
-							<h5>
-								<i class="bi bi-person-plus"></i> Registered At
-							</h5>
-							<h3 class="mt-4">2025-01-01 10:00</h3>
-						</div>
-					</div>
+					<app:information label="Registered At" icon="person-plus" bgColor="text-bg-info" value="2025-01-01 10:00" />
 				</div>
 				<div class="col">
-					<div class="card text-bg-secondary">
-						<div class="card-body">
-							<h5>
-								<i class="bi bi-calendar-check"></i> Last Accessed At At
-							</h5>
-							<h3 class="mt-4">2025-01-01 10:00</h3>
-						</div>
-					</div>
+					<app:information label="Last Accessed At At" icon="calendar-check" bgColor="text-bg-secondary" value="2025-01-01 10:00" />
 				</div>
 				<div class="col">
-					<div class="card text-bg-primary">
-						<div class="card-body">
-							<h5>
-								<i class="bi bi-shield"></i> Status
-							</h5>
-							<h3 class="mt-4">Active</h3>
-						</div>
-					</div>
+					<app:information label="Status" icon="shield" bgColor="text-bg-primary" value="Active" />
 				</div>
 			</div>
 
 			<div class="row mt-3">
 
 				<div class="col">
-					<div class="card text-bg-light">
-						<div class="card-body">
-							<h5>
-								<i class="bi bi-person"></i> Personal Info
-							</h5>
-
-							<div class="mb-3">
-								<span class="text-secondary">Name</span>
-								<div>Aung Aung</div>
-							</div>
-
-							<div class="mb-3">
-								<span class="text-secondary">Date of Birth</span>
-								<div>2000-10-1</div>
-							</div>
-
-							<div class="mb-3">
-								<span class="text-secondary">Gender</span>
-								<div>Female</div>
-								<br />
-							</div>
-
-						</div>
-					</div>
+					<app:personal-info 
+					name="Aung Aung" 
+					gender="Male" 
+					dob="2000-10-1" />
 				</div>
 
 				<div class="col">
-					<div class="card text-bg-light">
-						<div class="card-body">
-							<h5>
-								<i class="bi bi-telephone"></i> Contact Info
-							</h5>
-							<div class="mb-3">
-								<span class="text-secondary">Phone</span>
-								<div>09-1111-22222</div>
-							</div>
-
-							<div class="mb-3">
-								<span class="text-secondary">Email</span>
-								<div>aungaung@gmail.com</div>
-							</div>
-
-							<div class="mb-3">
-								<span class="text-secondary">Address</span>
-								<div>No.12 / 1F Yadanar Myaing Street, Kamayut 1 Quarter,
-									Kamayut, Yangon</div>
-							</div>
-						</div>
-					</div>
+					<app:contact-info 
+					address="No.12 / 1F Yadanar Myaing Street, Kamayut 1 Quarter,Kamayut, Yangon" 
+					phone="09-1111-22222" 
+					email="aungaung@gmail.com" />
 				</div>
 
 			</div>
