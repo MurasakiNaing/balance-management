@@ -23,6 +23,10 @@
 			<button class="btn btn-primary">
 				<i class="bi bi-search"></i> Search
 			</button>
+			
+			<a href="${ root }/member/entry/add-new/${ type.name().toLowerCase() }" class="btn btn-danger">
+				<i class="bi bi-plus"></i> New Entry
+			</a>
 		</div>
 	</form>
 	

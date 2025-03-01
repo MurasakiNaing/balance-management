@@ -2,6 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags" %>
 
-<app:layout-member title="Home">
-	<app:page-title title="Member Home" />
+<app:layout-member title="${ type }">
+	<app:page-title title="Edit Incomes" />
 </app:layout-member>

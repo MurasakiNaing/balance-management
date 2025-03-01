@@ -14,10 +14,23 @@ public class MemberLedgerEntryController {
 
 	@GetMapping("{type}")
 	String index(@PathVariable String type, ModelMap model) {
+
+		model.put("type", BalanceType.from(type));
+
+		return "/member/entries/list";
+	}
+
+	@GetMapping("/add-new/{type}")
+	String addNew(@PathVariable String type, ModelMap model) {
 		
 		model.put("type", BalanceType.from(type));
 		
-		return "/member/entries/list";
+		return "member/entries/edit";
 	}
-	
+
+	@GetMapping("/edit/{id}")
+	String edit(@PathVariable String id) {
+		return "member/entries/edit";
+	}
+
 }
