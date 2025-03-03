@@ -13,3 +13,13 @@
 	object-fit: cover;
 	object-position: top;
 }
+
+#balanceChart {
+	width: 100%;
+	height: 500px;
+}
+
+.pieChartRoot {
+	width: 100%;
+	height: 300px;
+}
