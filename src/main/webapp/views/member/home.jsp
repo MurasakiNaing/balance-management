@@ -26,7 +26,7 @@
 						<h5 class="card-title">
 							<i class="bi bi-person"></i> Profile
 						</h5>
-						<a href="#" class="btn-link">
+						<a href="${ root }/member/profile" class="btn-link">
 							<i class="bi-pencil"></i>
 						</a>
 					</div>
@@ -47,12 +47,39 @@
 						<div class="list-group-item">
 							<i class="bi bi-envelope"></i> aungaung@gmail.com
 						</div>
+						
+						<div class="list-group-item">
+							<i class="bi bi-map"></i> No.12 / 1F Yadanar Myaing Street, Kamayut 1 Quarter,Kamayut, Yangon
+						</div>
 					</div>
 				</div>
 			</div>
 
 			<!-- Access History -->
-			
+			<div class="card mt-4">
+				<div class="card-body">
+					<div class="d-flex justify-content-between align-items-start">
+						<h5 class="card-title">
+							<i class="bi bi-shield"></i> Access
+						</h5>
+						<a href="${ root }/member/access" class="btn-link">
+							<i class="bi bi-send"></i>
+						</a>
+					</div>
+					
+					<div class="list-group list-group-flush">
+						<div class="list-group-item">
+							<div class="fw-bold">Registered At</div>
+							<span>2024-10-12 10:00</span>
+						</div>
+						
+						<div class="list-group-item">
+							<div class="fw-bold">Last Accessed At</div>
+							<span>2025-03-02 20:00</span>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		
 		<div class="col">

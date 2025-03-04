@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MemberSettingProfileController {
 	
 	@GetMapping
-	String index() {
-		return "";
+	String editProfile() {
+		return "member/profile/edit";
 	}
 	
 }

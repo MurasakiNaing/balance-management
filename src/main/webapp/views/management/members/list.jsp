@@ -6,7 +6,7 @@
 	<app:page-title title="Member Management" />
 	
 	<!-- Search Form -->
-	<form action="" class="row">
+	<form action="#" class="row">
 		
 		<app:form-group label="Status" cssClass="col-auto">
 			<select name="form-select" class="form-select">
