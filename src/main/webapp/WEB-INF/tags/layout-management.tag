@@ -16,7 +16,7 @@
 <body>
 
 	<!-- Navigation -->
-	<nav class="navbar navbar-expand navbar-dark bg-dark">
+	<nav class="navbar navbar-expand navbar-dark sticky-top bg-dark">
 		<div class="container">
 			<a href="${ root }/admin/home" class="navbar-brand">
 				<i class="bi bi-house"></i> Balance Admin
@@ -45,7 +45,7 @@
 		</div>
 	</nav>
 
-	<main class="container mt-4">	
+	<main class="container my-4">
 		<jsp:doBody />
 	</main>
 	

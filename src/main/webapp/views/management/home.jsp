@@ -62,12 +62,19 @@
 			<div class="card">
 				<div class="card-body">
 					<h5 class="card-title">
-						<i class="bi bi-people"></i> Member Registration
+						<i class="bi bi-people"></i> Member Access
 					</h5>
+					
+					<div id="adminChart"></div>
+					
 				</div>
 			</div>
 		</div>
 		
 	</div>
 	
+	<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+	<script src="${ root }/resources/js/management-home.js"></script>
 </app:layout-management>
