@@ -9,17 +9,19 @@
 	<form action="#" class="row">
 		
 		<app:form-group label="Status" cssClass="col-auto">
-			<select name="form-select" class="form-select">
+			<select name="status" class="form-select">
 				<option value="">Search All</option>
+				<option value="true">Active</option>
+				<option value="false">Denied</option>
 			</select>
 		</app:form-group>
 		
 		<app:form-group label="Registered From" cssClass="col-auto">
-		 	<input name="from" type="date" class="form-control" />
+		 	<input name="dateFrom" type="date" class="form-control" />
 		</app:form-group>
 		
 		<app:form-group label="Registered To" cssClass="col-auto">
-		 	<input name="to" type="date" class="form-control" />
+		 	<input name="dateTo" type="date" class="form-control" />
 		</app:form-group>
 		
 		<app:form-group label="Name" cssClass="col-auto">
