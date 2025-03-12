@@ -2,15 +2,15 @@ package com.jdc.online.balances.controller.member.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
-public record LedgerEntryDetails(
+public record BalanceListItem(
 		String code,
+		LocalDateTime issuedAt,
 		String ledgerName,
-		BigDecimal amount,
-		LocalDateTime issuseAt,
 		String particular,
-		List<LedgerEntryDetailsItem> items
+		BigDecimal income,
+		BigDecimal expense,
+		BigDecimal balance
 		) {
 
 }

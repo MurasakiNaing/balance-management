@@ -8,11 +8,11 @@
 	<!-- Search Form -->
 	<form action="" class="row">
 		<app:form-group label="Date From" cssClass="col-auto">
-		 	<input name="from" type="date" class="form-control" />
+		 	<input name="dateFrom" type="date" class="form-control" />
 		</app:form-group>
 		
 		<app:form-group label="Date To" cssClass="col-auto">
-		 	<input name="to" type="date" class="form-control" />
+		 	<input name="dateTo" type="date" class="form-control" />
 		</app:form-group>
 		
 		<div class="col btn-wrapper">
@@ -27,7 +27,7 @@
 		<thead>
 			<tr>
 				<th>Issue At</th>
-				<th>Category</th>
+				<th>Ledger</th>
 				<th>Particular</th>
 				<th class="text-end">Expenses</th>
 				<th class="text-end">Incomes</th>

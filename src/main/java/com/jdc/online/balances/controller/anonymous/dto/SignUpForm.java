@@ -1,16 +1,16 @@
 package com.jdc.online.balances.controller.anonymous.dto;
 
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class SignUpForm {
 
-	@NotEmpty(message = "Please enter member name.")
+	@NotBlank(message = "Please enter member name.")
 	private String name;
-	@NotEmpty(message = "Please enter email for login.")
+	@NotBlank(message = "Please enter email for login.")
 	private String username;
-	@NotEmpty(message = "Please enter password.")
+	@NotBlank(message = "Please enter password.")
 	private String passworod;
-	
+
 }

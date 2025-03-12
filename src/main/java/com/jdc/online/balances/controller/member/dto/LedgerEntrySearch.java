@@ -5,8 +5,10 @@ import java.time.LocalDate;
 import lombok.Data;
 
 @Data
-public class BalanceSearch {
+public class LedgerEntrySearch {
 
 	private LocalDate dateFrom;
 	private LocalDate dateTo;
+	private String keyword;
+	
 }
