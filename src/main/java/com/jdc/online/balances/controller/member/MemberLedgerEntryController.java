@@ -24,7 +24,6 @@ public class MemberLedgerEntryController {
 			@RequestParam(required = false, defaultValue = "0") int page,
 			@RequestParam(required = false, defaultValue = "10") int size) {
 
-
 		return "/member/entries/list";
 	}
 
@@ -41,11 +40,11 @@ public class MemberLedgerEntryController {
 
 	@PostMapping("/save")
 	String save(@Validated @ModelAttribute(name = "from") LedgerEntryForm entryForm, BindingResult result) {
-		
-		if(result.hasErrors()) {
+
+		if (result.hasErrors()) {
 			return "member/entries/edit";
 		}
-		
+
 		return "redirect:/member/balance/20250225-001";
 	}
 

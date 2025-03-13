@@ -1,4 +1,4 @@
-package com.jdc.online.balances.packages;
+package com.jdc.online.balances.utils;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.StringUtils;
