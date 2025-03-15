@@ -19,7 +19,6 @@ public class District {
 	@Column(nullable = false)
 	private String name;
 
-	@Column(nullable = false)
 	@ManyToOne(optional = false)
 	private Region region;
 

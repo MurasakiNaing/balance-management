@@ -2,7 +2,7 @@ package com.jdc.online.balances.model.entity;
 
 import java.math.BigDecimal;
 
-import com.jdc.online.balances.model.entity.embeddable.LedgerEntryPk;
+import com.jdc.online.balances.model.entity.embeddable.LedgerEntryItemPk;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -15,7 +15,7 @@ import lombok.Data;
 public class LedgerEntryItem {
 
 	@EmbeddedId
-	private LedgerEntryPk id;
+	private LedgerEntryItemPk id;
 	
 	@ManyToOne(optional = false)
 	private LedgerEntry entry;
