@@ -40,4 +40,7 @@ public class Member extends AbstractEntity {
 	@ManyToOne
 	private Township township;
 	private String address;
+	
+	@OneToOne(mappedBy = "member")
+	private MemberActivity activity;
 }

@@ -1,9 +1,41 @@
 package com.jdc.online.balances.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public record PageResult<T>(List<T> contents, long count, int size, int page) {
 
+	public int getTotalPages() {
+		Long totalPage = count / size;
+		
+		if(totalPage % size >= 0) {
+			totalPage += 1;
+		}
+		
+		return totalPage.intValue();
+	}
+	
+	public List<Integer> getPageLinks() {
+		var links = new ArrayList<Integer>();
+		
+		var totalPage = getTotalPages();
+		links.add(page);
+		
+		while(links.getFirst() > 0 && links.size() < 3) {
+			links.addFirst(links.getFirst() - 1);
+		}
+		
+		while(links.getLast() < totalPage - 1 && links.size() < 5) {
+			links.addLast(links.getLast() + 1);
+		}
+		
+		while(links.getFirst() > 0 && links.size() < 5) {
+			links.addFirst(links.getFirst() - 1);
+		}
+		
+		return links;
+	}
+	
 	public static <T> Builder<T> builder() {
 		return new Builder<>();
 	}

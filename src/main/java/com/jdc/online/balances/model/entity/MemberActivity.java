@@ -27,6 +27,7 @@ public class MemberActivity extends AbstractEntity {
 	@OneToOne(optional = false)
 	private Member member;
 	private MemberStatus status;
+	private String statusChangeReason;
 	private BigDecimal balance;
 	private LocalDateTime registeredAt;
 	private LocalDateTime lastAccessAt;

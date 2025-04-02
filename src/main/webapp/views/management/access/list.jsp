@@ -1,31 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <app:layout-management title="Access">
 	<app:page-title title="Access History" />
 	
 	<!-- Search Form -->
-	<form action="" class="row">
+	<form class="row" id="searchForm">
+		
+		<input type="hidden" name="page" id="pageInput" />
+		<input type="hidden" name="size" id="sizeInput" />
 		
 		<app:form-group label="Status" cssClass="col-auto">
 			<select name="status" class="form-select">
 				<option value="">Search All</option>
-				<option value="Success">Success</option>
-				<option value="Fails">Fails</option>
+				<option value="Success" ${ param.status eq 'Success' ? 'selected' : '' }>Success</option>
+				<option value="Fails" ${ param.status eq 'Fails' ? 'selected' : '' }>Fails</option>
 			</select>
 		</app:form-group>
 		
 		<app:form-group label="Date From" cssClass="col-auto">
-			<input name="dateFrom" type="date" class="form-control" />
+			<input name="dateFrom" type="date" class="form-control" value="${ param.dateFrom }" />
 		</app:form-group>
 
 		<app:form-group label="Date To" cssClass="col-auto">
-			<input name="dateTo" type="date" class="form-control" />
+			<input name="dateTo" type="date" class="form-control" value="${ param.dateTo }" />
 		</app:form-group>
 		
 		<app:form-group label="Keyword" cssClass="col-auto">
-			<input name="keyword" class="form-control" placeholder="Search Keyword" />
+			<input name="keyword" class="form-control" placeholder="Search Keyword" value="${ param.keyword }" />
 		</app:form-group>
 		
 		<div class="col btn-wrapper">
@@ -49,17 +53,19 @@
 		</thead>
 		
 		<tbody>
-			<tr>
-				<td>Aung Aung</td>
-				<td>2025-02-24 10:00</td>
-				<td>Login</td>
-				<td>Success</td>
-				<td></td>
-			</tr>
+			<c:forEach items="${ result.contents() }" var="item">
+				<tr>
+					<td>${ item.member() }</td>
+					<td>${ dtf.formatDateTime(item.accessAtLocal) }</td>
+					<td>${ item.type() }</td>
+					<td>${ item.status() }</td>
+					<td>${ item.remark() }</td>
+				</tr>
+			</c:forEach>
 		</tbody>
 	</table>
 	
 	<!-- Pagination -->
-	<app:pagination></app:pagination>
+	<app:pagination pageResult="${ result }"></app:pagination>
 	
 </app:layout-management>

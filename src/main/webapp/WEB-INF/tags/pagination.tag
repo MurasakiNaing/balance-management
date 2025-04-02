@@ -1,37 +1,36 @@
 <%@ tag language="java" pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ attribute name="pageResult" type="com.jdc.online.balances.model.PageResult" required="true" %>
+
 <div class="d-flex justify-content-between">
 	
 	<div class="d-flex">
 		<!-- Page Select -->
 		<div class="input-group me-2">
 			<span class="input-group-text">Size</span>
-			<select name="" class="form-select">
-				<option value="10">10</option>
-				<option value="25">25</option>
-				<option value="50">50</option>
+			<select id="pageSizeSelect" name="" class="form-select">
+				<option value="10" ${ pageResult.size() eq '10' ? 'selected' : '' }>10</option>
+				<option value="25" ${ pageResult.size() eq '25' ? 'selected' : '' }>25</option>
+				<option value="50" ${ pageResult.size() eq '50' ? 'selected' : '' }>50</option>
 			</select>
 		</div>
 	
 		<!-- Page Links -->
 		<div class="d-flex page-links">
-			<a href="#" class="btn btn-outline-primary me-1">
+			<a href="#" data-page-number="0" class="btn btn-outline-primary me-1 pageLink">
 				<i class="bi bi-arrow-left"></i>
 			</a>
 			
-			<a href="#" class="btn btn-outline-primary me-1">
-				1
-			</a>
+			<c:forEach items="${ pageResult.pageLinks }" var="item">
+				
+				<a href="#" data-page-number="${ item }" class="btn ${ pageResult.page() eq item ? 'btn-primary' : 'btn-outline-primary' } me-1 pageLink">
+					${ item + 1 }
+				</a>
+				
+			</c:forEach>
 			
-			<a href="#" class="btn btn-primary me-1">
-				2
-			</a>
-			
-			<a href="#" class="btn btn-outline-primary me-1">
-				3
-			</a>
-			
-			<a href="#" class="btn btn-outline-primary">
+			<a href="#" data-page-number="${ pageResult.totalPages - 1 }" class="btn btn-outline-primary pageLink">
 				<i class="bi bi-arrow-right"></i>
 			</a>
 		</div>
@@ -43,14 +42,14 @@
 	
 		<div class="input-group me-2">
 			<span class="input-group-text">Total Pages</span>
-			<span class="form-control">10</span>
+			<span class="form-control">${ pageResult.totalPages }</span>
 		</div>
 		
 		<div class="input-group">
 			<span class="input-group-text">Total Results</span>
-			<span class="form-control">96</span>
+			<span class="form-control">${ pageResult.count() }</span>
 		</div>
 	
 	</div>
-	
+	<script type="text/javascript" src="${ root }/resources/js/pagination.js"></script>
 </div>

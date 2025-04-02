@@ -1,18 +1,23 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags" %>
 
 <app:layout-management title="Members">
 	<app:page-title title="Member Management" />
 	
 	<!-- Search Form -->
-	<form action="#" class="row">
+	<form action="#" class="row" id="searchForm">
+		
+		<input type="hidden" name="page" id="pageInput" />
+		<input type="hidden" name="size" id="sizeInput" />
 		
 		<app:form-group label="Status" cssClass="col-auto">
 			<select name="status" class="form-select">
 				<option value="">Search All</option>
-				<option value="true">Active</option>
-				<option value="false">Denied</option>
+				<option value="Active" ${ param.status eq 'Active' ? 'selected' : '' }>Active</option>
+				<option value="Denied" ${ param.status eq 'Denied' ? 'selected' : '' }>Denied</option>
 			</select>
 		</app:form-group>
 		
@@ -42,9 +47,9 @@
 			<tr>
 				<th>ID</th>
 				<th>Name</th>
-				<th>Status</th>
 				<th>Registered At</th>
 				<th>Last Login</th>
+				<th>Status</th>
 				<th>Change At</th>
 				<th>Remark</th>
 				<th></th>
@@ -52,25 +57,28 @@
 		</thead>
 		
 		<tbody>
-			<tr>
-				<td>1</td>
-				<td>Aung Aung</td>
-				<td>Active</td>
-				<td>2025-03-23 10:00</td>
-				<td>2025-03-23 10:00</td>
-				<td></td>
-				<td></td>
-				<td class="text-center">
-					<a href="${ root }/admin/member/1" class="icon-link">
-						<i class="bi bi-arrow-right"></i>
-					</a>
-				</td>
-			</tr>
+		
+			<c:forEach items="${ result.contents() }" var="item">
+				<tr>
+					<td>${ item.id() }</td>
+					<td>${ item.name() }</td>
+					<td>${ dtf.formatDateTime(item.registeredAt()) }</td>
+					<td>${ dtf.formatDateTime(item.lastLoginAt()) }</td>
+					<td>${ item.status() }</td>
+					<td>${ dtf.formatDateTime(item.changedAt()) }</td>
+					<td>${ item.remark() }</td>
+					<td class="text-center">
+						<a href="${ root }/admin/member/${ item.id() }" class="icon-link">
+							<i class="bi bi-arrow-right"></i>
+						</a>
+					</td>
+				</tr>
+			</c:forEach>
 		</tbody>
 		
 	</table>
 	
 	<!-- Pagination -->
-	<app:pagination />
+	<app:pagination pageResult="${ result }" />
 	
 </app:layout-management>

@@ -54,6 +54,6 @@
 	</table>
 	
 	<!-- Pagination -->
-	<app:pagination />
+	<app:pagination pageResult="${ result }" />
 	
 </app:layout-member>
