@@ -2,13 +2,17 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 
 <app:layout-member title="${ type }">
 	<div class="d-flex justify-content-between align-items-start">
-		<app:page-title title="Edit Incomes" />
+		<app:page-title title="${ form.id eq null ? 'Add New' : 'Edit' } Incomes" />
 	</div>
 	
-	<form action="${ root }/member/entry/save" method="post" class="row">
+	<sf:form id="editForm" action="${ root }/member/entry/${ urlType }/save" method="post" modelAttribute="form" class="row">
+		
+		<sf:hidden path="id"/>
+	
 		<!-- Summary -->
 		<div class="col-4">
 			<div class="card">
@@ -19,19 +23,24 @@
 										
 					<!-- Ledger -->
 					<app:form-group label="Ledger" cssClass="mb-3">
-						<select class="form-select">
+						<sf:select path="ledgerId" class="form-select">
 							<option value="">Select Ledger</option>
-						</select>
+							<c:forEach var="item" items="${ ledgers }">
+								<option value="${ item.id() }" ${ item.id() eq form.ledgerId ? 'selected' : '' } >${ item.name() }</option>
+							</c:forEach>
+						</sf:select>
+						<sf:errors path="ledgerId" cssClass="text-sm text-danger" />
 					</app:form-group>
 
 					<!-- Particular -->
 					<app:form-group label="Particular" cssClass="mb-3">
-						<textarea rows="3" cols="40" class="form-control" placeholder="Please enter particular."></textarea>
+						<sf:textarea path="particular" rows="3" cols="40" class="form-control" placeholder="Please enter particular."></sf:textarea>
+						<sf:errors path="particular" cssClass="text-sm text-danger" />
 					</app:form-group>
 					
 					<!-- Total -->
 					<app:form-group label="Total Amount" >
-						<span class="form-control">10,000</span>
+						<span id="allTotal" class="form-control">10,000</span>
 					</app:form-group>
 				</div>
 			</div>
@@ -52,30 +61,34 @@
 						<div class="col-2 text-end">Total</div>
 					</div>
 					
-					<div>
-						<div class="row mt-2">
-							<div class="col">
-								<div class="input-group">
-									<button type="button" class="btn btn-outline-danger input-group-text">
-										<i class="bi bi-eraser"></i>
-									</button>									
-									<input type="text" class="form-control" placeholder="Enter Item Name" />
+					<div id="entryItemsContainer">
+						<c:forEach var="item" varStatus="sts" items="${form.items}">
+						
+							<div class="row mt-2">
+								<sf:hidden path="items[${ sts.index }].deleted"/>
+								<div class="col">
+									<div class="input-group">
+										<button data-delete-input-id="items${ sts.index }.deleted" data-delete-url="${ root }/member/entry/${urlType}/item/remove" type="button" class="deleteBtn btn btn-outline-danger input-group-text">
+											<i class="bi bi-eraser"></i>
+										</button>									
+										<sf:input type="text" path="items[${ sts.index }].itemName" class="form-control" placeholder="Enter Item Name" />
+									</div>
+								</div>
+								<div class="col-2">
+									<sf:input type="number" path="items[${ sts.index }].unitPrice" class="form-control changesInput" />
+								</div>
+								<div class="col-2">
+									<sf:input type="number" path="items[${ sts.index }].quantity" class="form-control changesInput" />
+								</div>
+								<div class="col-2">
+									<span id="row${ sts.index }Total" class="form-control text-end">0</span>
 								</div>
 							</div>
-							<div class="col-2">
-								<input type="number" class="form-control" />
-							</div>
-							<div class="col-2">
-								<input type="number" class="form-control" />
-							</div>
-							<div class="col-2">
-								<span class="form-control text-end">0</span>
-							</div>
-						</div>
+						</c:forEach>
 					</div>
 					
 					<div class="mt-3">
-						<button type="button" class="btn btn-outline-primary">
+						<button id="addItemBtn" data-add-url="${ root }/member/entry/${urlType}/item/add" type="button" class="btn btn-outline-primary">
 							<i class="bi bi-plus"></i> Add Item
 						</button>
 						
@@ -87,6 +100,6 @@
 				</div>
 			</div>
 		</div>
-	</form>	
-	
+	</sf:form>	
+	<script src="${ root }/resources/js/ledger-entry-edit.js" ></script>
 </app:layout-member>

@@ -1,22 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <app:layout-member title="${ type }">
 	<app:page-title title="${ type } Management" />
 	
 	<!-- Search Form -->
-	<form action="" class="row">
+	<form class="row" id="searchForm">
+		
+		<input type="hidden" name="page" id="pageInput" />
+		<input type="hidden" name="size" id="sizeInput" />
+		
 		<app:form-group label="Date From" cssClass="col-auto">
-		 	<input name="from" type="date" class="form-control" />
+		 	<input name="dateFrom" value="${ param.dateFrom }" type="date" class="form-control" />
 		</app:form-group>
 		
 		<app:form-group label="Date To" cssClass="col-auto">
-		 	<input name="to" type="date" class="form-control" />
+		 	<input name="dateTo" value="${ param.dateTo }" type="date" class="form-control" />
 		</app:form-group>
 		
 		<app:form-group label="Keyword" cssClass="col-auto">
-		 	<input name="keyword" type="text" placeholder="Search Keyword" class="form-control" />
+		 	<input name="keyword" value="${ param.keyword }" type="text" placeholder="Search Keyword" class="form-control" />
 		</app:form-group>
 		
 		<div class="col btn-wrapper">
@@ -24,7 +29,7 @@
 				<i class="bi bi-search"></i> Search
 			</button>
 			
-			<a href="${ root }/member/entry/add-new/${ type.name().toLowerCase() }" class="btn btn-danger">
+			<a href="${ root }/member/entry/${ type.name().toLowerCase() }/create" class="btn btn-danger">
 				<i class="bi bi-plus"></i> New Entry
 			</a>
 		</div>
@@ -44,18 +49,20 @@
 		</thead>
 		
 		<tbody>
-			<tr>
-				<td>20250225-001</td>
-				<td>2025-02-25 10:00</td>
-				<td>Service Charges</td>
-				<td>Maintenance Fees For POS</td>
-				<td class="text-end">100,000</td>
-				<td class="text-center">
-					<a href="${ root }/member/balance/20250225-001">
-						<i class="bi bi-arrow-right"></i>
-					</a>
-				</td>
-			</tr>
+			<c:forEach var="item" items="${ result.contents() }">			
+				<tr>
+					<td>${ item.code() }</td>
+					<td>${ dtf.formatDateTime(item.issuedAt()) }</td>
+					<td>${ item.ledgerName() }</td>
+					<td>${ item.particular() }</td>
+					<td class="text-end">${ item.amount() }</td>
+					<td class="text-center">
+						<a href="${ root }/member/balance/${item.code()}">
+							<i class="bi bi-arrow-right"></i>
+						</a>
+					</td>
+				</tr>
+			</c:forEach>
 		</tbody>
 	</table>
 	

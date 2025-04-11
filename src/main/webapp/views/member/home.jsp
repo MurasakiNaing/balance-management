@@ -32,24 +32,24 @@
 					</div>
 				</div>
 				
-				<img src="${ root }/resources/photos/default-profile.png" class="profile-image" alt="Profile Image" />
+				<img src="${ root }/resources/photos/${ profile.profileImage() }" class="profile-image" alt="Profile Image" />
 				
 				<div class="card-body">
 					<div class="list-group list-group-flush">
 						<div class="list-group-item">
-							<i class="bi bi-person"></i> Aung Aung
+							<i class="bi bi-person"></i> ${ profile.name() }
 						</div>
 						
 						<div class="list-group-item">
-							<i class="bi bi-telephone"></i> 09-1111-22222
+							<i class="bi bi-telephone"></i> ${ profile.phone() ne null ? profile.phone() : 'Undefined' }
 						</div>
 						
 						<div class="list-group-item">
-							<i class="bi bi-envelope"></i> aungaung@gmail.com
+							<i class="bi bi-envelope"></i> ${ profile.email() }
 						</div>
 						
 						<div class="list-group-item">
-							<i class="bi bi-map"></i> No.12 / 1F Yadanar Myaing Street, Kamayut 1 Quarter,Kamayut, Yangon
+							<i class="bi bi-map"></i> ${ profile.address() ne null and profile.address() ne '' ? profile.address() : 'Undefined' }
 						</div>
 					</div>
 				</div>
@@ -70,12 +70,12 @@
 					<div class="list-group list-group-flush">
 						<div class="list-group-item">
 							<div class="fw-bold">Registered At</div>
-							<span>2024-10-12 10:00</span>
+							<span>${ dtf.formatDateTime(profile.registeredAt()) }</span>
 						</div>
 						
 						<div class="list-group-item">
 							<div class="fw-bold">Last Accessed At</div>
-							<span>2025-03-02 20:00</span>
+							<span>${ dtf.formatDateTime(profile.lastAccessAt()) }</span>
 						</div>
 					</div>
 				</div>

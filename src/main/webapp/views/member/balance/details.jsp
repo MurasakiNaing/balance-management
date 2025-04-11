@@ -1,12 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="app" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
 <app:layout-member title="Balances">
 	
 	<div class="d-flex justify-content-between align-items-start">
 		<app:page-title title="Incomes Details" />
-		<a href="${ root }/member/entry/edit/20250225-001" class="btn btn-danger">
+		<c:url var="editUrl" value="${ root }/member/entry/expenses/edit">
+			<c:param name="id" value="${ details.code() }"></c:param>
+		</c:url>
+		<a href="${ editUrl }" class="btn btn-danger">
 			<i class="bi bi-pencil"></i> Edit Entry
 		</a>	
 	</div>
@@ -31,25 +35,19 @@
 						</thead>
 						
 						<tbody>
-							<tr>
-								<td>1</td>
-								<td>Print Paper</td>
-								<td class="text-end">35,000</td>
-								<td class="text-end">2</td>
-								<td class="text-end">70,000</td>
-							</tr>
-							
-							<tr>
-								<td>2</td>
-								<td>Maintenance Fees</td>
-								<td class="text-end">30,000</td>
-								<td class="text-end">1</td>
-								<td class="text-end">30,000</td>
-							</tr>
+							<c:forEach var="item" items="${ details.items() }" varStatus="sts">
+								<tr>
+									<td>${ sts.index + 1 }</td>
+									<td>${ item.itemName() }</td>
+									<td class="text-end">${ item.unitPrice() }</td>
+									<td class="text-end">${ item.quantity() }</td>
+									<td class="text-end">${ item.total }</td>
+								</tr>
+							</c:forEach>
 							
 							<tr>
 								<td colspan="4">All Total</td>
-								<td class="text-end">100,000</td>
+								<td class="text-end">${ details.total }</td>
 							</tr>
 						</tbody>
 					</table>
@@ -67,27 +65,27 @@
 					<div class="list-group  list-group-flush">
 						<div class="list-group-item">
 							<div>Code</div>
-							<div>20250225-001</div>
+							<div>${ details.code() }</div>
 						</div>
 						
 						<div class="list-group-item">
 							<div>Ledger</div>
-							<div>Service Charges</div>
+							<div>${ details.ledgerName() }</div>
 						</div>
 						
 						<div class="list-group-item">
 							<div>Amount</div>
-							<div>100,000 MMK</div>
+							<div>${ details.amount() }</div>
 						</div>
 						
 						<div class="list-group-item">
 							<div>Issued At</div>
-							<div>2025-02-25 10:00</div>
+							<div>${ dtf.formatDateTime(details.issueAt()) }</div>
 						</div>
 						
 						<div class="list-group-item">
 							<div>Particular</div>
-							<div>Maintenance fees for POS</div>
+							<div>${ details.particular() }</div>
 						</div>
 					</div>
 				</div>

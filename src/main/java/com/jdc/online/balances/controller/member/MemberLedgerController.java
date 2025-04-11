@@ -1,5 +1,6 @@
 package com.jdc.online.balances.controller.member;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -13,36 +14,50 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.jdc.online.balances.controller.member.dto.LedgerForm;
 import com.jdc.online.balances.controller.member.dto.LedgerSearch;
 import com.jdc.online.balances.model.entity.consts.BalanceType;
+import com.jdc.online.balances.services.LedgerManagementService;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/member/ledger")
 public class MemberLedgerController {
 
+	private final LedgerManagementService service;
+
 	@GetMapping
-	String index(ModelMap map, LedgerSearch search) {
+	String index(ModelMap model, LedgerSearch search, @RequestParam(required = false, defaultValue = "0") int page,
+			@RequestParam(required = false, defaultValue = "10") int size) {
+
+		var username = SecurityContextHolder.getContext().getAuthentication().getName();
+		
+		model.put("result", service.search(username, search, page, size));
+
 		return "/member/ledgers/list";
 	}
-	
+
 	@PostMapping
 	String save(ModelMap model, @Validated @ModelAttribute LedgerForm ledgerForm, BindingResult result) {
-		
-		if(result.hasErrors()) {
+
+		if (result.hasErrors()) {
 			return "/member/ledgers/list";
 		}
 		
+		service.save(ledgerForm);
+
 		return "redirect:/member/ledger";
 	}
-	
+
 	@ModelAttribute("balanceTypes")
-	BalanceType[]  types() {
+	BalanceType[] types() {
 		return BalanceType.values();
 	}
-	
+
 	@ModelAttribute(name = "form")
 	LedgerForm ledgerForm(@RequestParam(required = false) Integer id) {
-		
-		if(null != id) {
-			// Search from database response as form
+
+		if (null != id) {
+			return service.findForEdit(id);
 		}
 		return new LedgerForm();
 	}

@@ -24,15 +24,16 @@ public record MemberProfileDetails(
 		
 		builder.id(entity.getId())
 		.name(entity.getName())
+		.profileImage(Optional.ofNullable(entity.getProfileImage()).orElse("default-profile.png"))
 		.phone(entity.getPhone())
 		.email(entity.getEmail())
 		.registeredAt(entity.getActivity().getRegisteredAt())
 		.lastAccessAt(entity.getActivity().getLastAccessAt());
 		
 		var list = List.of(
-				entity.getAddress(),
+				Optional.ofNullable(entity.getAddress()).orElse(""),
 				Optional.ofNullable(entity.getTownship()).map(a -> a.getName()).orElse(""),
-				Optional.ofNullable(entity.getTownship().getDistrict().getRegion()).map(a -> a.getName()).orElse("")
+				Optional.ofNullable(entity.getTownship()).map(a -> a.getDistrict()).map(a -> a.getRegion()).map(a -> a.getName()).orElse("")
 			);
 		
 		var address = list.stream().filter(StringUtils::hasLength).collect(Collectors.joining(", "));

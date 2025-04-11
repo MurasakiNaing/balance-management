@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', ()=> {
 	const sizeInput = document.getElementById('sizeInput');
 	const sizeSelect = document.getElementById('pageSizeSelect');
 	
-	if(searchForm && pageInput && sizeInput) {
+	if(searchForm && pageInput && sizeInput && sizeSelect) {
 		
 		// Size Select Change
 		sizeSelect.addEventListener('change', () => {

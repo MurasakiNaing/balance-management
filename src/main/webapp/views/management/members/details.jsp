@@ -18,7 +18,7 @@
 		<div class="col-3">
 			<!-- Profile Information -->
 			<img class="image-fluid img-thumbnail profile-image"
-				src="${ root }/resources/photos/default-profile.png" alt="" />
+				src="${ root }/resources/photos/${ result.profileImage() }" alt="Profile Image" />
 		</div>
 
 

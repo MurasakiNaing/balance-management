@@ -1,6 +1,5 @@
 package com.jdc.online.balances.model.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedBy;
@@ -19,7 +18,7 @@ import lombok.Data;
 public class AbstractEntity {
 
 	@CreatedDate
-	private LocalDate createdAt;
+	private LocalDateTime createdAt;
 	
 	@CreatedBy
 	private String createdBy;

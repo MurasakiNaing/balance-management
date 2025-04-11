@@ -4,13 +4,29 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.jdc.online.balances.model.entity.LedgerEntry;
+
 public record LedgerEntryDetails(
 		String code,
 		String ledgerName,
 		BigDecimal amount,
-		LocalDateTime issuseAt,
+		LocalDateTime issueAt,
 		String particular,
 		List<LedgerEntryDetailsItem> items
 		) {
+	
+	public BigDecimal getTotal() {
+		return items.stream().map(a -> a.getTotal()).reduce((a, b) -> a.add(b)).orElse(BigDecimal.ZERO);
+	}
 
+	public static LedgerEntryDetails from(LedgerEntry entity) {
+		return new LedgerEntryDetails(
+				entity.getId().getCode(),
+				entity.getLedger().getName(),
+				entity.getAmount(),
+				entity.getIssuedAt(), 
+				entity.getParticular(), 
+				entity.getItems().stream().map(LedgerEntryDetailsItem::from).toList());
+	}
+	
 }

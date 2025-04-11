@@ -1,7 +1,12 @@
 package com.jdc.online.balances.controller.member;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,49 +17,106 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jdc.online.balances.controller.member.dto.LedgerEntryForm;
+import com.jdc.online.balances.controller.member.dto.LedgerEntryFormItem;
 import com.jdc.online.balances.controller.member.dto.LedgerEntrySearch;
+import com.jdc.online.balances.controller.member.dto.LedgerSelectItem;
 import com.jdc.online.balances.model.entity.consts.BalanceType;
+import com.jdc.online.balances.services.LedgerEntryService;
+import com.jdc.online.balances.services.LedgerManagementService;
+import com.jdc.online.balances.utils.exceptions.AppBusinessException;
+
+import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequestMapping("/member/entry")
+@RequiredArgsConstructor
+@RequestMapping("/member/entry/{type}")
 public class MemberLedgerEntryController {
 
-	@GetMapping("{type}")
+	private final LedgerEntryService entryService;
+	private final LedgerManagementService ledgerService;
+
+	@GetMapping
 	String index(ModelMap model, @PathVariable BalanceType type, LedgerEntrySearch search,
 			@RequestParam(required = false, defaultValue = "0") int page,
 			@RequestParam(required = false, defaultValue = "10") int size) {
 
+		var username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		model.put("result", entryService.search(username, type, search, page, size));
 		return "/member/entries/list";
 	}
 
-	@GetMapping("/add-new/{type}")
+	@GetMapping("/create")
 	String addNew(ModelMap model, @PathVariable BalanceType type) {
 
 		return "member/entries/edit";
 	}
 
-	@GetMapping("/edit/{id}")
-	String edit(@PathVariable String id) {
+	@GetMapping("/edit")
+	String edit(@RequestParam String id) {
 		return "member/entries/edit";
 	}
 
 	@PostMapping("/save")
-	String save(@Validated @ModelAttribute(name = "from") LedgerEntryForm entryForm, BindingResult result) {
+	String save(ModelMap model, @Validated @ModelAttribute(name = "form") LedgerEntryForm entryForm, BindingResult result) {
 
 		if (result.hasErrors()) {
 			return "member/entries/edit";
 		}
 
-		return "redirect:/member/balance/20250225-001";
+		String id;
+		try {
+			id = entryService.save(entryForm);
+			return "redirect:/member/balance/%s".formatted(id);
+		} catch (AppBusinessException e) {
+			model.put("error", e.getMessage());
+			return "member/entries/edit";
+		}
+		
 	}
 
-	@PostMapping("/save/add-item")
-	String addItem(@ModelAttribute(name = "from") LedgerEntryForm entryForm) {
+	@PostMapping("/item/add")
+	String addItem(@ModelAttribute(name = "form") LedgerEntryForm entryForm) {
+		entryForm.getItems().add(new LedgerEntryFormItem());
 		return "member/entries/edit";
 	}
 
-	@PostMapping("/save/remove-item")
-	String removeItem(@ModelAttribute(name = "from") LedgerEntryForm entryForm) {
+	@PostMapping("/item/remove")
+	String removeItem(@ModelAttribute(name = "form") LedgerEntryForm entryForm) {
+		var itemArray = entryForm.getItems().stream().filter(a -> !a.isDeleted()).collect(Collectors.toList());
+		if(itemArray.isEmpty()) {
+			itemArray.add(new LedgerEntryFormItem());
+		}
+		entryForm.setItems(itemArray);
+		
 		return "member/entries/edit";
+	}
+
+	@ModelAttribute(name = "form")
+	LedgerEntryForm ledgerEntryForm(@PathVariable BalanceType type, @RequestParam(required = false) String id) {
+		
+		var form = new LedgerEntryForm();
+		
+		if(StringUtils.hasLength(id)) {
+			form = entryService.findForEdit(id);
+		}
+		
+		if(form.getItems() == null || form.getItems().isEmpty()) {
+			form.getItems().add(new LedgerEntryFormItem());
+		}
+		
+		return form;
+	}
+
+	@ModelAttribute(name = "ledgers")
+	List<LedgerSelectItem> getLedgers(@PathVariable BalanceType type) {
+		var username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+		return ledgerService.findForEntry(username, type);
+	}
+	
+	@ModelAttribute(name = "urlType")
+	String getType(@PathVariable BalanceType type) {
+		return type.name().toLowerCase();
 	}
 }
