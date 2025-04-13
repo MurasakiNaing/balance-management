@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +56,7 @@ public class LedgerEntryService {
 		return safeCall(entryRepo.findById(entryPk).map(LedgerEntryForm::from), "ledger entry", "entry id", id);
 	}
 
+	@PreAuthorize("authentication.name eq #username")
 	public PageResult<LedgerEntryListItem> search(String username, BalanceType type, LedgerEntrySearch search, int page,
 			int size) {
 
@@ -171,27 +173,27 @@ public class LedgerEntryService {
 		for (var item : entry.getItems()) {
 			itemRepo.deleteById(item.getId());
 		}
-
+		
 		// Insert all items
-		for (var i = 0; i < form.getItems().size(); i++) {
-			var item = form.getItems().get(i);
+		var newItems = form.getItems().stream().filter(a -> !a.isDeleted()).toList();
+		
+		for (var i = 0; i < newItems.size(); i++) {
+			var item = newItems.get(i);
 
-			if (!item.isDeleted()) {
-				var entryItem = new LedgerEntryItem();
-				var pk = new LedgerEntryItemPk();
-				pk.setIssueDate(entry.getId().getIssueDate());
-				pk.setMemberId(entry.getId().getMemberId());
-				pk.setSeqNumber(entry.getId().getSeqNumber());
-				pk.setItemNumber(i + 1);
-				entryItem.setId(pk);
-
-				entryItem.setEntry(entry);
-				entryItem.setItem(item.getItemName());
-				entryItem.setQuantity(item.getQuantity());
-				entryItem.setUnitPrice(item.getUnitPrice());
-
-				itemRepo.save(entryItem);
-			}
+			var entryItem = new LedgerEntryItem();
+			var pk = new LedgerEntryItemPk();
+			pk.setIssueDate(entry.getId().getIssueDate());
+			pk.setMemberId(entry.getId().getMemberId());
+			pk.setSeqNumber(entry.getId().getSeqNumber());
+			pk.setItemNumber(i + 1);
+			entryItem.setId(pk);
+			
+			entryItem.setEntry(entry);
+			entryItem.setItem(item.getItemName());
+			entryItem.setQuantity(item.getQuantity());
+			entryItem.setUnitPrice(item.getUnitPrice());
+			
+			itemRepo.save(entryItem);
 		}
 
 		// Update ledger entry info
@@ -199,37 +201,51 @@ public class LedgerEntryService {
 		entry.setLedger(ledgerRepo.findById(form.getLedgerId()).get());
 		entry.setIssuedAt(LocalDateTime.now());
 
-		var lastAmount = Optional.ofNullable(member.getActivity().getBalance()).orElse(BigDecimal.ZERO);
+		var currentBalance = Optional.ofNullable(member.getActivity().getBalance()).orElse(BigDecimal.ZERO);
+		var originalBalance = switch(entry.getLedger().getType()) {
+		case Expenses -> currentBalance.add(entry.getAmount());
+		case Incomes -> currentBalance.subtract(entry.getAmount());
+		};
+		
 		var amount = form.getItems().stream().filter(a -> !a.isDeleted())
 				.map(a -> a.getUnitPrice().multiply(BigDecimal.valueOf(a.getQuantity()))).reduce((a, b) -> a.add(b))
 				.orElse(BigDecimal.ZERO);
-
-		entry.setLastAmount(lastAmount);
 		entry.setAmount(amount);
-
+		
 		// Update Member Balance
-		var balance = switch (entry.getLedger().getType()) {
-		case Expenses -> entry.getLastAmount().subtract(amount);
-		case Incomes -> entry.getLastAmount().add(amount);
+		currentBalance = switch (entry.getLedger().getType()) {
+		case Expenses -> originalBalance.subtract(amount);
+		case Incomes -> originalBalance.add(amount);
 		};
-		member.getActivity().setBalance(balance);
+		
+		member.getActivity().setBalance(currentBalance);
 
 		// Update remaining entry balance
 		var entries = entryRepo.findRemainingEntries(member.getId(), entry.getId().getIssueDate(),
 				entry.getId().getSeqNumber());
-		for (var remain : entries) {
-			remain.setLastAmount(member.getActivity().getBalance());
+		
+		for(var i = 0; i < entries.size(); i++) {
+			var remain = entries.get(i);
+			var entryBalance = BigDecimal.ZERO;
+			if(i > 0) {
+				var prevEntry = entries.get(i - 1);
+				entryBalance = switch(prevEntry.getLedger().getType()) {
+				case Expenses -> prevEntry.getLastAmount().subtract(prevEntry.getAmount());
+				case Incomes -> prevEntry.getLastAmount().add(prevEntry.getAmount());
+				};
+			} else {
+				entryBalance = switch(entry.getLedger().getType()) {
+				case Expenses -> entry.getLastAmount().subtract(entry.getAmount());
+				case Incomes -> entry.getLastAmount().add(entry.getAmount());
+				};
+			}
 			var remainAmount = remain.getItems().stream()
 					.map(a -> a.getUnitPrice().multiply(BigDecimal.valueOf(a.getQuantity()))).reduce((a, b) -> a.add(b))
 					.orElse(BigDecimal.ZERO);
-			var remainBalance = switch (remain.getLedger().getType()) {
-			case Expenses -> remain.getLastAmount().subtract(remainAmount);
-			case Incomes -> remain.getLastAmount().add(remainAmount);
-			};
-			
-			member.getActivity().setBalance(remainBalance);
-			
+			remain.setAmount(remainAmount);
+			remain.setLastAmount(entryBalance);
 		}
+		
 		return entry.getId().getCode();
 	}
 

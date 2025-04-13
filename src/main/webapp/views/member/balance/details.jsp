@@ -7,12 +7,15 @@
 	
 	<div class="d-flex justify-content-between align-items-start">
 		<app:page-title title="Incomes Details" />
-		<c:url var="editUrl" value="${ root }/member/entry/expenses/edit">
-			<c:param name="id" value="${ details.code() }"></c:param>
-		</c:url>
-		<a href="${ editUrl }" class="btn btn-danger">
-			<i class="bi bi-pencil"></i> Edit Entry
-		</a>	
+		
+		<c:if test="${ editEnable }">
+			<c:url var="editUrl" value="${ root }/member/entry/${ details.type().name().toLowerCase() }/edit">
+				<c:param name="id" value="${ details.code() }"></c:param>
+			</c:url>
+			<a href="${ editUrl }" class="btn btn-danger">
+				<i class="bi bi-pencil"></i> Edit Entry
+			</a>	
+		</c:if>
 	</div>
 		
 	<div class="row">

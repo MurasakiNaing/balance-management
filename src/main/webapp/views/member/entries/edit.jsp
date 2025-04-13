@@ -6,7 +6,7 @@
 
 <app:layout-member title="${ type }">
 	<div class="d-flex justify-content-between align-items-start">
-		<app:page-title title="${ form.id eq null ? 'Add New' : 'Edit' } Incomes" />
+		<app:page-title title="${ form.id eq null ? 'Add New' : 'Edit' } ${ urlType }" />
 	</div>
 	
 	<sf:form id="editForm" action="${ root }/member/entry/${ urlType }/save" method="post" modelAttribute="form" class="row">
@@ -14,7 +14,7 @@
 		<sf:hidden path="id"/>
 	
 		<!-- Summary -->
-		<div class="col-4">
+		<div class="col-3">
 			<div class="card">
 				<div class="card-body">
 					<h5 class="card-title">
@@ -56,15 +56,15 @@
 					
 					<div class="row">
 						<div class="col">Item Name</div>
-						<div class="col-2">Unit Price</div>
-						<div class="col-2">Quantity</div>
+						<div class="col-3">Unit Price</div>
+						<div class="col-3">Quantity</div>
 						<div class="col-2 text-end">Total</div>
 					</div>
 					
 					<div id="entryItemsContainer">
 						<c:forEach var="item" varStatus="sts" items="${form.items}">
 						
-							<div class="row mt-2">
+							<div class="row mt-2 ${ item.deleted ? 'd-none' : '' }">
 								<sf:hidden path="items[${ sts.index }].deleted"/>
 								<div class="col">
 									<div class="input-group">
@@ -73,12 +73,15 @@
 										</button>									
 										<sf:input type="text" path="items[${ sts.index }].itemName" class="form-control" placeholder="Enter Item Name" />
 									</div>
+									<sf:errors path="items[${ sts.index }].itemName" cssClass="text-sm text-danger" />
 								</div>
-								<div class="col-2">
+								<div class="col-3">
 									<sf:input type="number" path="items[${ sts.index }].unitPrice" class="form-control changesInput" />
+									<sf:errors path="items[${ sts.index }].unitPrice" cssClass="text-sm text-danger" />
 								</div>
-								<div class="col-2">
+								<div class="col-3">
 									<sf:input type="number" path="items[${ sts.index }].quantity" class="form-control changesInput" />
+									<sf:errors path="items[${ sts.index }].quantity" cssClass="text-sm text-danger" />
 								</div>
 								<div class="col-2">
 									<span id="row${ sts.index }Total" class="form-control text-end">0</span>

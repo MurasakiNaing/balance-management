@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import com.jdc.online.balances.model.entity.LedgerEntryItem;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -15,8 +16,12 @@ public class LedgerEntryFormItem {
 	
 	@NotBlank(message = "Please enter item name.")
 	private String itemName;
+	
+	@Min(value = 1, message = "Please enter unit price.")
 	@NotNull(message = "Please enter unit price.")
 	private BigDecimal unitPrice = BigDecimal.ZERO;
+	
+	@Min(value = 1, message = "Please enter quantity.")
 	@NotNull(message = "Please enter quantity.")
 	private Integer quantity = 0;
 	

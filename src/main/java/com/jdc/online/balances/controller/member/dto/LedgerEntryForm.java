@@ -2,6 +2,7 @@ package com.jdc.online.balances.controller.member.dto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.jdc.online.balances.model.entity.LedgerEntry;
 
@@ -32,7 +33,7 @@ public class LedgerEntryForm {
 		form.setLedgerId(entity.getLedger().getId());
 		form.setParticular(entity.getParticular());
 
-		form.setItems(entity.getItems().stream().map(LedgerEntryFormItem::from).toList());
+		form.setItems(entity.getItems().stream().map(LedgerEntryFormItem::from).collect(Collectors.toList()));
 
 		return form;
 	}
