@@ -1,6 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
 
 	am5.ready(() => {
+		
+		const loadSummary = (url) => {
+			fetch(url, {
+				method: 'GET',
+				headers : {
+					'Content-Type' : 'application/json'
+				}
+			}).then(response => {
+				if(!response.ok) {
+					console.log(response.json())
+					throw new Error(`API Error: ${response.status}`)
+				}
+				return response.json();
+			}).then(data => {
+				document.getElementById('incomes').innerText = data.incomes;
+				document.getElementById('expenses').innerText = data.expenses;
+				document.getElementById('balances').innerText = data.balances;
+			})
+			.catch(error => {
+				console.error('Error Fetching API', error);
+			})
+		}
+		
+		const monthlyInput = document.getElementById('monthly');
+		const yearlyInput = document.getElementById('yearly')
+		
+		monthlyInput.addEventListener('click', () => {
+			loadSummary(monthlyInput.dataset['summaryUrl']);
+		})
+		
+		yearlyInput.addEventListener('click', () => {
+			loadSummary(yearlyInput.dataset['summaryUrl']);
+		})
+		
+		loadSummary(monthlyInput.dataset['summaryUrl'])
+		
 		loadBalanceChart(balanceData);
 		loadPieChart(expensesData, 'expensesChart');
 		loadPieChart(incomesData, 'incomesChart');

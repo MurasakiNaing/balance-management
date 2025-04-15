@@ -10,7 +10,8 @@
 			<span class="">${ title }</span>
 		</div>
 		<h4 class="d-flex justify-content-between">
-			<i class="bi bi-${ icon }"></i> ${ value }
+			<i class="bi bi-${ icon }"></i>
+			<span id="${ title.toLowerCase() }">${ value }</span>
 		</h4>
 	</div>
 </div>
