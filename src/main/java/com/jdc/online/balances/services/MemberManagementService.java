@@ -2,6 +2,7 @@ package com.jdc.online.balances.services;
 
 import static com.jdc.online.balances.utils.EntityOperations.safeCall;
 
+import java.time.LocalDate;
 import java.util.function.Function;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import com.jdc.online.balances.model.entity.Member;
 import com.jdc.online.balances.model.entity.MemberActivity_;
 import com.jdc.online.balances.model.entity.Member_;
 import com.jdc.online.balances.model.entity.consts.MemberStatus;
+import com.jdc.online.balances.model.repo.MemberActivityRepo;
 import com.jdc.online.balances.model.repo.MemberRepo;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -31,6 +33,7 @@ public class MemberManagementService {
 	private static final String KEY_NAME = "id";
 
 	private final MemberRepo memberRepo;
+	private final MemberActivityRepo activityRepo;
 
 	@Transactional
 	public void updateStatus(long id, MemberStatusForm form) {
@@ -49,6 +52,15 @@ public class MemberManagementService {
 
 	public PageResult<MemberListItem> search(MemberSearch search, int page, int size) {
 		return memberRepo.search(queryFunc(search), countFunc(search), page, size);
+	}
+
+	public Long findMemberCount(LocalDate dateFrom) {
+		
+		if(null == dateFrom) {
+			return memberRepo.count();
+		}
+		
+		return activityRepo.countByRegisteredAtIsGreaterThanEqual(dateFrom.atStartOfDay());
 	}
 
 	private Function<CriteriaBuilder, CriteriaQuery<MemberListItem>> queryFunc(MemberSearch search) {
